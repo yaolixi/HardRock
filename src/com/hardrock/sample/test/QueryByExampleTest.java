@@ -125,4 +125,14 @@ public class QueryByExampleTest {
 		Collection<MongoObject> prods = prod.find();
 		System.out.println(prods);
 	}
+	
+	@Test
+	public void testQueryWithWhere(){
+		Prod prod = MongoObjectProxy.create(Prod.class);
+		
+		Criteria criteria = new Criteria().add(Restrictions.where("this.mktId==2 || this.id==9"));
+		prod.addCriteria(criteria);
+		Collection<MongoObject> prods = prod.find();
+		System.out.println(prods);
+	}
 }
