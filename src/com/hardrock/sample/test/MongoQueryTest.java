@@ -1,40 +1,23 @@
-package com.hardrock.sample;
+package com.hardrock.sample.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import com.hardrock.mongo.MongoQueryCondition;
+import com.hardrock.sample.SampleMongoExecutor;
+import com.hardrock.sample.SampleMongoQuery;
 import com.hardrock.sample.model.Acct;
 import com.hardrock.sample.model.Mkt;
 import com.hardrock.sample.model.Prod;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
-public class Sample1 {
+public class MongoQueryTest {
 	public static void main(String[] args) {
 		
 	}
 	
-	/**
-	 * 新的关联查询设想
-	 */
-	public static void findProdByMktCodeNew(){
-		Mkt mkt = (Mkt) MongoObjectProxy.create(Mkt.class);
-		mkt.setCode("001");
-		
-		Prod prod = (Prod) MongoObjectProxy.create(Prod.class);
-//		prod.setMktId(mkt.getId());
-//		prod.foreignTo(mkt);
-		
-		SampleMongoQuery<Prod> query = new SampleMongoQuery<Prod>(Prod.class);
-		query.setQueryCondition(new MongoQueryCondition(prod.buildCriteria()));
-		System.out.println(query.findAll());
-	}
-	
-	/**
-	 * 老的关联查询
-	 */
-	public static void findProdByMktCodeOld(){
+	public static void findProdByMktCode(){
 		SampleMongoQuery<Mkt> mktQuery = new SampleMongoQuery<Mkt>(Mkt.class);
 		mktQuery.setQueryCondition(new MongoQueryCondition(new BasicDBObject("code","001")));
 		Collection<Mkt> mkts = mktQuery.findAll();

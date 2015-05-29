@@ -1,4 +1,4 @@
-package com.hardrock.sample;
+package com.hardrock.mongo.util;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;

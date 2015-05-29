@@ -2,9 +2,9 @@ package com.hardrock.mongo;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.Date;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.bson.BSONObject;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
+import com.hardrock.mongo.criteria.Criteria;
 import com.hardrock.sample.SampleMongoQuery;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -202,26 +203,6 @@ public abstract class MongoObject implements MongoObjectInterface{
 		return this;
 	}
 	
-	public MongoObject lt(String property, Date date){
-		criteriaForQueryUsage.append(property, new BasicDBObject("$lt", date));
-		return this;
-	}
-	
-	public MongoObject lte(String property, Date date){
-		criteriaForQueryUsage.append(property, new BasicDBObject("$lte", date));
-		return this;
-	}
-	
-	public MongoObject gt(String property, Date date){
-		criteriaForQueryUsage.append(property, new BasicDBObject("$gt", date));
-		return this;
-	}
-	
-	public MongoObject gte(String property, Date date){
-		criteriaForQueryUsage.append(property, new BasicDBObject("$gte", date));
-		return this;
-	}
-	
 	private ExclusionStrategy strategy = new ExclusionStrategy() {
 		
 		@Override
@@ -250,6 +231,12 @@ public abstract class MongoObject implements MongoObjectInterface{
 	
 	public BasicDBObject buildCriteria(){
 		return criteriaForQueryUsage;
+	}
+	
+	public void addCriteria(Criteria criteria){
+		if(criteria != null){
+			criteriaForQueryUsage.putAll((BSONObject)criteria.getCriteria());
+		}
 	}
 	
 	private Class<? extends MongoObject> cglibInheritClass;

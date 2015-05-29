@@ -1,10 +1,9 @@
-package com.hardrock.sample;
+package com.hardrock.mongo.util;
 
 import java.net.UnknownHostException;
 
 import org.bson.BasicBSONObject;
 
-import com.hardrock.mongo.MongoUtil;
 import com.hardrock.mongo.SingletonMongoClient;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
