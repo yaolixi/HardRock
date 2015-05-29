@@ -123,6 +123,22 @@ public class Restrictions {
 		return criterion;
 	}
 	
+	public static Criterion not(Criterion cri){
+		Criterion criterion = new Criterion();
+		criterion.getBo().append("$not", cri.getBo());
+		return criterion;
+	}
+	
+	public static Criterion nor(Criterion ...args){
+		Criterion criterion = new Criterion();
+		BasicDBList dl = new BasicDBList();
+		for (int i = 0; i < args.length; i++) {
+			dl.add(args[i].getBo());
+		}
+		criterion.getBo().append("$nor", dl);
+		return criterion;
+	}
+	
 	/**
 	 * Evaluation Selectors
 	 * $mod 	Performs a modulo operation on the value of a field and selects documents with a specified result.
@@ -139,4 +155,10 @@ public class Restrictions {
 		criterion.getBo().append(property, new BasicDBObject("$mod", dl));
 		return criterion;
 	}
+	
+	/**
+	 * Element Selectors
+	 * $exists 	Matches documents that have the specified field.
+	 * $type 	Selects documents if a field is of the specified type.
+	 */
 }
