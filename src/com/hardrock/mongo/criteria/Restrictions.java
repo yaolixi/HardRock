@@ -32,6 +32,16 @@ public class Restrictions {
 		return criterion;
 	}
 	
+	public static Criterion in(String property, Object[] objs){
+		Criterion criterion = new Criterion();
+		BasicDBList dl = new BasicDBList();
+		for(Object obj : objs){
+			dl.add(obj);
+		}
+		criterion.getBo().append(property, new BasicDBObject("$in", dl));
+		return criterion;
+	}
+	
 	public static Criterion in(String property, Collection<? extends Object> objs){
 		Criterion criterion = new Criterion();
 		BasicDBList dl = new BasicDBList();
@@ -63,6 +73,15 @@ public class Restrictions {
 	public static Criterion gte(String property, Object obj){
 		Criterion criterion = new Criterion();
 		criterion.getBo().append(property, new BasicDBObject("$gte", obj));
+		return criterion;
+	}
+	
+	public static Criterion mod(String property, int divisor, int remainder){
+		Criterion criterion = new Criterion();
+		BasicDBList dl = new BasicDBList();
+		dl.add(divisor);
+		dl.add(remainder);
+		criterion.getBo().append(property, new BasicDBObject("$mod", dl));
 		return criterion;
 	}
 }

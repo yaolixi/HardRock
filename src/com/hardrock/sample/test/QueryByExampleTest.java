@@ -115,4 +115,14 @@ public class QueryByExampleTest {
 		Collection<MongoObject> prods = prod.find();
 		System.out.println(prods);
 	}
+	
+	@Test
+	public void testQueryWithMod(){
+		Prod prod = MongoObjectProxy.create(Prod.class);
+		
+		Criteria criteria = new Criteria().add(Restrictions.mod("id", 3, 1));
+		prod.addCriteria(criteria);
+		Collection<MongoObject> prods = prod.find();
+		System.out.println(prods);
+	}
 }
