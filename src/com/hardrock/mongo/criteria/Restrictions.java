@@ -1,7 +1,6 @@
 package com.hardrock.mongo.criteria;
 
 import java.util.Collection;
-import java.util.Date;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -43,27 +42,27 @@ public class Restrictions {
 		return criterion;
 	}
 	
-	public static Criterion lt(String property, Date date){
+	public static Criterion lt(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$lt", date));
+		criterion.getBo().append(property, new BasicDBObject("$lt", obj));
 		return criterion;
 	}
 	
-	public static Criterion lte(String property, Date date){
+	public static Criterion lte(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$lte", date));
+		criterion.getBo().append(property, new BasicDBObject("$lte", obj));
 		return criterion;
 	}
 	
-	public static Criterion gt(String property, Date date){
+	public static Criterion gt(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$gt", date));
+		criterion.getBo().append(property, new BasicDBObject("$gt", obj));
 		return criterion;
 	}
 	
-	public static Criterion gte(String property, Date date){
+	public static Criterion gte(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$gte", date));
+		criterion.getBo().append(property, new BasicDBObject("$gte", obj));
 		return criterion;
 	}
 }

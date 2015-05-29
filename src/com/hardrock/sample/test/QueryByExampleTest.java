@@ -31,7 +31,6 @@ public class QueryByExampleTest {
 	 */
 	@Test
 	public void testFindProdbyForeignKey(){
-		
 		Mkt mkt = MongoObjectProxy.create(Mkt.class);
 		mkt.setCode("000");
 		
@@ -102,6 +101,16 @@ public class QueryByExampleTest {
 							Restrictions.and(Restrictions.eq("id", 10), Restrictions.eq("mktId", 2))
 						)
 					);
+		prod.addCriteria(criteria);
+		Collection<MongoObject> prods = prod.find();
+		System.out.println(prods);
+	}
+	
+	@Test
+	public void testQueryWithLt(){
+		Prod prod = MongoObjectProxy.create(Prod.class);
+		
+		Criteria criteria = new Criteria().add(Restrictions.lt("prodType", "T"));
 		prod.addCriteria(criteria);
 		Collection<MongoObject> prods = prod.find();
 		System.out.println(prods);
