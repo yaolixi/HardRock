@@ -7,7 +7,7 @@ public class MongoObjectExclusionStrategy implements ExclusionStrategy{
 
 	@Override
 	public boolean shouldSkipField(FieldAttributes fa) {
-		return fa.getName().equals("criteriaForQueryUsage") || fa.getName().equals("queryConditionForQueryUsage");
+		return fa.getName().equals("_criteriaForQueryUsage") || fa.getName().equals("_queryConditionForQueryUsage");
 	}
 	
 	@Override

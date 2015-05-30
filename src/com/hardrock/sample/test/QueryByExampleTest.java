@@ -37,19 +37,19 @@ public class QueryByExampleTest {
 //		System.out.println(prods);
 //	}
 //	
-//	/**
-//	 * query by foreign key
-//	 */
-//	@Test
-//	public void testFindProdbyForeignKey(){
-//		Mkt mkt = MongoObjectProxy.create(Mkt.class);
-//		mkt.setCode("000");
-//		
-//		Prod prod = MongoObjectProxy.create(Prod.class);
-//		prod.bindForeignKey("mktId", mkt);
-//		Collection<MongoObject> prods = prod.sortDesc("id").retainFields(new String[]{"name", "code"}).limit(1).skip(1).find();
-//		System.out.println(prods);
-//	}
+	/**
+	 * query by foreign key
+	 */
+	@Test
+	public void testFindProdbyForeignKey(){
+		Mkt mkt = MongoObjectProxy.create(Mkt.class);
+		mkt.setCode("000");
+		
+		Prod prod = MongoObjectProxy.create(Prod.class);
+		prod.bindForeignKey("mktId", mkt);
+		Collection<MongoObject> prods = prod.sortDesc("id").retainFields(new String[]{"name", "code"}).limit(1).skip(1).find();
+		System.out.println(prods);
+	}
 //	
 //	/**
 //	 * query by 2 level foreign key
@@ -137,15 +137,15 @@ public class QueryByExampleTest {
 //		System.out.println(prods);
 //	}
 //	
-	@Test
-	public void testQueryWithWhere(){
-		Prod prod = MongoObjectProxy.create(Prod.class);
-		
-		Criteria criteria = new Criteria().add(Restrictions.where("this.mktId==1 && this.id==9"));
-		prod.addCriteria(criteria);
-		Collection<MongoObject> prods = prod.find();
-		System.out.println(prods);
-	}
+//	@Test
+//	public void testQueryWithWhere(){
+//		Prod prod = MongoObjectProxy.create(Prod.class);
+//		
+//		Criteria criteria = new Criteria().add(Restrictions.where("this.mktId==1 && this.id==9"));
+//		prod.addCriteria(criteria);
+//		Collection<MongoObject> prods = prod.find();
+//		System.out.println(prods);
+//	}
 	
 //	@Test
 //	public void testAggregate(){

@@ -14,7 +14,11 @@ import com.mongodb.BasicDBObject;
 
 public class MongoQueryTest {
 	public static void main(String[] args) {
-		
+		Mkt mkt = new Mkt();
+		mkt.setId(3);
+		mkt.setCode("002");
+		mkt.setName("Test");
+		mkt.save();
 	}
 	
 	public static void findProdByMktCode(){

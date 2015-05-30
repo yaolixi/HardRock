@@ -99,31 +99,31 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	private Class actualClass(){
-		if(cglibInheritClass == null){
+		if(_cglibInheritClass == null){
 			return this.getClass();
 		}
 		else{
-			return cglibInheritClass;
+			return _cglibInheritClass;
 		}
 	}
 	
 	public Collection<MongoObject> find(){
 		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), this.actualClass().getSimpleName());
-		queryConditionForQueryUsage.setCriteria(criteriaForQueryUsage);
-		query.setQueryCondition(queryConditionForQueryUsage);
+		_queryConditionForQueryUsage.setCriteria(_criteriaForQueryUsage);
+		query.setQueryCondition(_queryConditionForQueryUsage);
 		return query.findAll(this.actualClass());
 	}
 	
 	public MongoObject sort(DBObject orderBy){
-		queryConditionForQueryUsage.setOrderBy(orderBy);
+		_queryConditionForQueryUsage.setOrderBy(orderBy);
 		return this;
 	}
 	
 	public MongoObject sortAsc(String property){
-		DBObject orderBy = queryConditionForQueryUsage.getOrderBy();
+		DBObject orderBy = _queryConditionForQueryUsage.getOrderBy();
 		if(orderBy == null){
 			orderBy = new BasicDBObject(property, 1);
-			queryConditionForQueryUsage.setOrderBy(orderBy);
+			_queryConditionForQueryUsage.setOrderBy(orderBy);
 		}
 		else{
 			orderBy.put(property, 1);
@@ -132,13 +132,13 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public MongoObject sortAsc(String[] properties){
-		DBObject orderBy = queryConditionForQueryUsage.getOrderBy();
+		DBObject orderBy = _queryConditionForQueryUsage.getOrderBy();
 		if(orderBy == null){
 			orderBy = new BasicDBObject();
 			for (int i = 0; i < properties.length; i++) {
 				orderBy.put(properties[i], 1);
 			}
-			queryConditionForQueryUsage.setOrderBy(orderBy);
+			_queryConditionForQueryUsage.setOrderBy(orderBy);
 		}
 		else{
 			for (int i = 0; i < properties.length; i++) {
@@ -149,10 +149,10 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public MongoObject sortDesc(String property){
-		DBObject orderBy = queryConditionForQueryUsage.getOrderBy();
+		DBObject orderBy = _queryConditionForQueryUsage.getOrderBy();
 		if(orderBy == null){
 			orderBy = new BasicDBObject(property, -1);
-			queryConditionForQueryUsage.setOrderBy(orderBy);
+			_queryConditionForQueryUsage.setOrderBy(orderBy);
 		}
 		else{
 			orderBy.put(property, -1);
@@ -161,13 +161,13 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public MongoObject sortDesc(String[] properties){
-		DBObject orderBy = queryConditionForQueryUsage.getOrderBy();
+		DBObject orderBy = _queryConditionForQueryUsage.getOrderBy();
 		if(orderBy == null){
 			orderBy = new BasicDBObject();
 			for (int i = 0; i < properties.length; i++) {
 				orderBy.put(properties[i], -1);
 			}
-			queryConditionForQueryUsage.setOrderBy(orderBy);
+			_queryConditionForQueryUsage.setOrderBy(orderBy);
 		}
 		else{
 			for (int i = 0; i < properties.length; i++) {
@@ -178,35 +178,35 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public MongoObject limit(int limit){
-		queryConditionForQueryUsage.setLimit(limit);
+		_queryConditionForQueryUsage.setLimit(limit);
 		return this;
 	}
 	
 	public MongoObject skip(int skip){
-		queryConditionForQueryUsage.setSkip(skip);
+		_queryConditionForQueryUsage.setSkip(skip);
 		return this;
 	}
 	
 	public MongoObject fields(BasicDBObject fields){
-		queryConditionForQueryUsage.setFields(fields);
+		_queryConditionForQueryUsage.setFields(fields);
 		return this;
 	}
 	
 	public MongoObject removeFields(String[] fields){
-		BasicDBObject bo = queryConditionForQueryUsage.getFields();
+		BasicDBObject bo = _queryConditionForQueryUsage.getFields();
 		for (int i = 0; i < fields.length; i++) {
 			bo.append(fields[i], 0);
 		}
-		queryConditionForQueryUsage.setFields(bo);
+		_queryConditionForQueryUsage.setFields(bo);
 		return this;
 	}
 	
 	public MongoObject retainFields(String[] fields){
-		BasicDBObject bo = queryConditionForQueryUsage.getFields();
+		BasicDBObject bo = _queryConditionForQueryUsage.getFields();
 		for (int i = 0; i < fields.length; i++) {
 			bo.append(fields[i], 1);
 		}
-		queryConditionForQueryUsage.setFields(bo);
+		_queryConditionForQueryUsage.setFields(bo);
 		return this;
 	}
 	
@@ -220,23 +220,23 @@ public abstract class MongoObject implements MongoObjectInterface{
 		return true;
 	}
 	
-	private BasicDBObject criteriaForQueryUsage = new BasicDBObject();
-	private MongoQueryCondition queryConditionForQueryUsage = new MongoQueryCondition();
+	private BasicDBObject _criteriaForQueryUsage = new BasicDBObject();
+	private MongoQueryCondition _queryConditionForQueryUsage = new MongoQueryCondition();
 	
 	public BasicDBObject buildCriteria(){
-		return criteriaForQueryUsage;
+		return _criteriaForQueryUsage;
 	}
 	
 	public void addCriteria(Criteria criteria){
 		if(criteria != null){
-			criteriaForQueryUsage.putAll((BSONObject)criteria.getCriteria());
+			_criteriaForQueryUsage.putAll((BSONObject)criteria.getCriteria());
 		}
 	}
 	
-	private Class<? extends MongoObject> cglibInheritClass;
+	private Class<? extends MongoObject> _cglibInheritClass;
 	
 	public <T extends MongoObject> void assignCglibInheritClass(Class<T> cglibInheritClass){
-		this.cglibInheritClass = cglibInheritClass;
+		this._cglibInheritClass = cglibInheritClass;
 	}
 	
 	public void bindForeignKey(String property, MongoObject obj){
@@ -246,7 +246,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 			if(fields[i].getName().equals(property)){
 				ForeignKey foreignKey = fields[i].getAnnotation(ForeignKey.class);
 				if(foreignKey != null){
-					MongoQuery query = new MongoQuery(getDBName(), foreignKey.foreignClass().getSimpleName());
+					MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), foreignKey.foreignClass().getSimpleName());
 					query.setQueryCondition(new MongoQueryCondition(obj.buildCriteria()));
 					Collection<?> fkResult = query.findAll(foreignKey.foreignClass());
 					
@@ -259,7 +259,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 							e.printStackTrace();
 						}
 					}
-					criteriaForQueryUsage.append(property, new BasicDBObject("$in", dl));
+					_criteriaForQueryUsage.append(property, new BasicDBObject("$in", dl));
 				}
 			}
 		}
