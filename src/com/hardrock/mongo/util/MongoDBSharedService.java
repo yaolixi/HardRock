@@ -20,7 +20,7 @@ public class MongoDBSharedService {
 	 * @throws UnknownHostException 
 	 */
 	private static int getNextId(String seq_name){
-		MongoClient mongoClient = SingletonMongoClient.getInstance();
+		MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
 		DB db = mongoClient.getDB("isys");
 		
 	    String sequence_collection = "Seq"; // the name of the sequence collection
@@ -47,7 +47,7 @@ public class MongoDBSharedService {
 	}
 	
 	public static int getCurrentId(){
-		MongoClient mongoClient = SingletonMongoClient.getInstance();
+		MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
 		DB db = mongoClient.getDB("isys");
 		
 	    String sequence_collection = "Seq";

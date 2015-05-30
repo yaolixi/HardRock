@@ -2,8 +2,6 @@ package com.hardrock.mongo.criteria;
 
 import java.util.Collection;
 
-import org.bson.BSONObject;
-
 import com.hardrock.mongo.util.BSONType;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -268,4 +266,10 @@ public class Restrictions {
 		criterion.getBo().append(property, new BasicDBObject("$type", bsonType.getNumber()));
 		return criterion;
 	}
+	
+//	public static Criterion project(String property, boolean expression){
+//		Criterion criterion = new Criterion();
+//		criterion.getBo().append("$project", new BasicDBObject(property, 1));
+//		return criterion;
+//	}
 }

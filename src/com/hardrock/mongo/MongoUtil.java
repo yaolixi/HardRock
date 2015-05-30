@@ -20,14 +20,18 @@ public class MongoUtil {
 		return clazz.getSimpleName();
 	}
 	
-	public static MongoClient createMongoClient(String host, int port) throws UnknownHostException{
-		Builder builder = MongoClientOptions.builder();
-		builder.connectionsPerHost(2);
-		builder.autoConnectRetry(true);
-		builder.maxWaitTime(5000);
-		MongoClientOptions options = builder.build();
-		
-		ServerAddress servAddr = new ServerAddress(host ,port);
-		return new MongoClient(servAddr, options);
+	public static MongoClient createMongoClient(String host, int port){
+		try {
+			Builder builder = MongoClientOptions.builder();
+			builder.connectionsPerHost(2);
+			builder.autoConnectRetry(true);
+			builder.maxWaitTime(5000);
+			MongoClientOptions options = builder.build();
+			
+			ServerAddress servAddr = new ServerAddress(host ,port);
+			return new MongoClient(servAddr, options);
+		} catch (UnknownHostException e) {
+			throw new MongoConnectionException(e);
+		}
 	}
 }

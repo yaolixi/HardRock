@@ -13,15 +13,19 @@ import com.google.gson.GsonBuilder;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
 import com.hardrock.mongo.criteria.Criteria;
-import com.hardrock.sample.SampleMongoQuery;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
 
 public abstract class MongoObject implements MongoObjectInterface{
 	
 	public abstract String getDBName();
+	
+	protected MongoClient getMongoClient(){
+		return SingletonMongoClient.getDefaultLocalClient();
+	}
 	
 	protected void save(DBObject doc){
 		String[] pk = null;
@@ -101,10 +105,14 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public Collection<MongoObject> find(){
-		SampleMongoQuery<MongoObject> query = new SampleMongoQuery<MongoObject>(this.actualClass());
+//		SampleMongoQuery<MongoObject> query = new SampleMongoQuery<MongoObject>(this.actualClass());
+		
+		System.out.println("db:" + getDBName());
+		
+		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), this.actualClass().getSimpleName());
 		queryConditionForQueryUsage.setCriteria(criteriaForQueryUsage);
 		query.setQueryCondition(queryConditionForQueryUsage);
-		return query.findAll();
+		return query.findAll(this.actualClass());
 	}
 	
 	public MongoObject sort(DBObject orderBy){

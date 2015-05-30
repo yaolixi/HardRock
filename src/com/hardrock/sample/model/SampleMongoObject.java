@@ -2,9 +2,7 @@ package com.hardrock.sample.model;
 
 import com.hardrock.mongo.MongoObject;
 
-public abstract class SampleMongoObject extends MongoObject {
-	
-	public SampleMongoObject(){}
+public class SampleMongoObject extends MongoObject {
 	
 	@Override
 	public String getDBName() {

@@ -16,7 +16,8 @@ public class MongoQuery {
 	
 	private final static Gson GSON = GsonTypeAdapter.getGsonBuilder(GsonAdapterType.DESERIALIZER).create();
 	
-	private MongoClient mongoClient = SingletonMongoClient.getInstance();
+	//by default connect to local database
+	protected MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
 	
 	//数据库的标识
 	private String dbName;
@@ -108,9 +109,9 @@ public class MongoQuery {
 	 */
 	protected <T> T findOne(Class<T> clazz){
 		DB db = mongoClient.getDB(dbName);
-
+		
 		DBCollection coll = db.getCollection(collection);
-
+		
 		DBObject obj = (DBObject)coll.findOne(getQueryCondition().getCriteria(), getQueryCondition().getFields());
 		
 		if(obj == null){return null;}
@@ -122,7 +123,7 @@ public class MongoQuery {
 	 * 获得记录数目
 	 * @return
 	 */
-	public int getCount(){
+	public int count(){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);

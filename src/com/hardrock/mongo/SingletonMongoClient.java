@@ -1,35 +1,36 @@
 package com.hardrock.mongo;
 
-import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mongodb.MongoClient;
 
 public class SingletonMongoClient {
-	private static MongoClient client;
-	private static String hostAddr = null;
-	public static MongoClient getInstance(){
-		if (client == null){
-			try {
-				if(hostAddr == null){
-					hostAddr = "127.0.0.1";
-				}
-				
-				client = MongoUtil.createMongoClient(hostAddr, 27017);
-			} catch (UnknownHostException e) {
-				throw new MongoConnectionException(e);
-			}
+	
+	private static Map<String, MongoClient> clients = new HashMap<String, MongoClient>();
+	
+	private static String getConnStr(String hostAddr, int port){
+		return hostAddr + ":" + port;
+	} 
+	
+	public static MongoClient getInstance(String hostAddr, int port){
+		String connStr = getConnStr(hostAddr, port);
+		
+		if(clients.get(connStr) == null){
+			MongoClient client = MongoUtil.createMongoClient(hostAddr, port);
+			clients.put(connStr, client);
+			return client;
 		}
-		return client;
+		else{
+			return clients.get(connStr);
+		}
 	}
+	
 	private SingletonMongoClient(){
 		
 	}
 	
-	/**
-	 * 设置一下地址
-	 * @param addr
-	 */
-	public static void setServerAddress(String addr){
-		hostAddr = addr;
+	public static MongoClient getDefaultLocalClient(){
+		return getInstance("127.0.0.1", 27017);
 	}
 }
