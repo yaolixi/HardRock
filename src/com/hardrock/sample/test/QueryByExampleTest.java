@@ -6,14 +6,14 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.hardrock.mongo.MongoObject;
 import com.hardrock.mongo.MongoQuery;
 import com.hardrock.mongo.MongoQueryCondition;
 import com.hardrock.mongo.MongoUtil;
 import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.mongo.criteria.Criteria;
 import com.hardrock.mongo.criteria.Restrictions;
-import com.hardrock.mongo.util.MongoObjectProxy;
+import com.hardrock.mongo.object.MongoObject;
+import com.hardrock.mongo.object.MongoObjectProxy;
 import com.hardrock.sample.SampleMongoQuery;
 import com.hardrock.sample.model.Mkt;
 import com.hardrock.sample.model.Prod;
@@ -139,9 +139,9 @@ public class QueryByExampleTest {
 //	
 	@Test
 	public void testQueryWithWhere(){
-		Prod prod = MongoObjectProxy.create(Prod.class, "isys", MongoUtil.createMongoClient("121.41.43.200", 27017));
+		Prod prod = MongoObjectProxy.create(Prod.class);
 		
-		Criteria criteria = new Criteria().add(Restrictions.where("this.mktId==1 && this.code=='600114'"));
+		Criteria criteria = new Criteria().add(Restrictions.where("this.mktId==1 && this.id==9"));
 		prod.addCriteria(criteria);
 		Collection<MongoObject> prods = prod.find();
 		System.out.println(prods);

@@ -1,6 +1,6 @@
 package com.hardrock.sample.model;
 
-import com.hardrock.mongo.MongoObject;
+import com.hardrock.mongo.object.MongoObject;
 
 public class SampleMongoObject extends MongoObject {
 	

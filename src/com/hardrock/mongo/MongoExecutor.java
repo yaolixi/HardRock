@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.hardrock.mongo.object.MongoObjectExclusionStrategy;
 import com.hardrock.util.GsonTypeAdapter;
 import com.hardrock.util.GsonTypeAdapter.GsonAdapterType;
 import com.mongodb.BasicDBObject;
@@ -19,18 +19,7 @@ import com.mongodb.util.JSON;
 
 public class MongoExecutor {
 	
-	private static ExclusionStrategy strategy = new ExclusionStrategy() {
-		
-		@Override
-		public boolean shouldSkipField(FieldAttributes fa) {
-			return fa.getName().equals("criteriaForQueryUsage") || fa.getName().equals("cglibInheritClass");
-		}
-		
-		@Override
-		public boolean shouldSkipClass(Class<?> arg0) {
-			return false;
-		}
-	};
+	private static ExclusionStrategy strategy = new MongoObjectExclusionStrategy();
 	
 	private static Gson sgson = GsonTypeAdapter.getGsonBuilder(GsonAdapterType.SERIALIZER).setExclusionStrategies(strategy).create();
 	

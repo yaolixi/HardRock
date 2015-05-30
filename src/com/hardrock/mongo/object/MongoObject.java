@@ -1,4 +1,4 @@
-package com.hardrock.mongo;
+package com.hardrock.mongo.object;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -6,10 +6,13 @@ import java.util.Collection;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.bson.BSONObject;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hardrock.mongo.MongoExecutionException;
+import com.hardrock.mongo.MongoExecutor;
+import com.hardrock.mongo.MongoQuery;
+import com.hardrock.mongo.MongoQueryCondition;
+import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
 import com.hardrock.mongo.criteria.Criteria;
@@ -105,10 +108,6 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public Collection<MongoObject> find(){
-//		SampleMongoQuery<MongoObject> query = new SampleMongoQuery<MongoObject>(this.actualClass());
-		
-		System.out.println("db:" + getDBName());
-		
 		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), this.actualClass().getSimpleName());
 		queryConditionForQueryUsage.setCriteria(criteriaForQueryUsage);
 		query.setQueryCondition(queryConditionForQueryUsage);
@@ -211,22 +210,9 @@ public abstract class MongoObject implements MongoObjectInterface{
 		return this;
 	}
 	
-	private ExclusionStrategy strategy = new ExclusionStrategy() {
-		
-		@Override
-		public boolean shouldSkipField(FieldAttributes fa) {
-			return fa.getName().equals("criteriaForQueryUsage") || fa.getName().equals("queryConditionForQueryUsage");
-		}
-		
-		@Override
-		public boolean shouldSkipClass(Class<?> arg0) {
-			return false;
-		}
-	};
-	
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setExclusionStrategies(strategy).create();
+		Gson gson = new GsonBuilder().setExclusionStrategies(new MongoObjectExclusionStrategy()).create();
 		return this.getClass().getSimpleName() + "=" + gson.toJson(this);
 	}
 	

@@ -1,4 +1,4 @@
-package com.hardrock.mongo;
+package com.hardrock.mongo.object;
 
 public interface MongoObjectInterface {
 

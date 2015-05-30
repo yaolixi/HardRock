@@ -8,12 +8,9 @@ import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.ServerAddress;
 
 public class MongoUtil {
-//	public static final String ISYS_DB_NAME = "isys";
 	
 	public static String getCollectionName(Object obj){
-		String className = obj.getClass().getSimpleName();
-		return className;
-//		return className.substring(0, 1).toLowerCase() + className.substring(1);
+		return obj.getClass().getSimpleName();
 	}
 	
 	public static <T> String getCollectionName(Class<T> clazz){
