@@ -2,7 +2,7 @@ package com.hardrock.sample;
 
 import com.hardrock.mongo.DefaultMongoQuery;
 import com.hardrock.mongo.MongoQueryCondition;
-import com.hardrock.mongo.MongoUtil;
+import com.hardrock.mongo.util.MongoUtil;
 import com.hardrock.sample.model.Prod;
 import com.mongodb.BasicDBObject;
 

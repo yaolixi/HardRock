@@ -3,7 +3,7 @@ package com.hardrock.sample;
 import java.util.Collection;
 
 import com.hardrock.mongo.MongoExecutor;
-import com.hardrock.mongo.MongoUtil;
+import com.hardrock.mongo.util.MongoUtil;
 import com.mongodb.DBObject;
 
 public class SampleMongoExecutor extends MongoExecutor{

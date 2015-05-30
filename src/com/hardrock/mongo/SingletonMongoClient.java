@@ -3,6 +3,7 @@ package com.hardrock.mongo;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hardrock.mongo.util.MongoUtil;
 import com.mongodb.MongoClient;
 
 public class SingletonMongoClient {

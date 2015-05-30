@@ -1,7 +1,7 @@
 package com.hardrock.sample;
 
 import com.hardrock.mongo.DefaultMongoQuery;
-import com.hardrock.mongo.MongoUtil;
+import com.hardrock.mongo.util.MongoUtil;
 
 public class SampleMongoQuery<T> extends DefaultMongoQuery<T> {
 

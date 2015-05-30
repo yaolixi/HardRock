@@ -20,7 +20,6 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.WriteResult;
 
 public abstract class MongoObject implements MongoObjectInterface{
 	
@@ -28,29 +27,6 @@ public abstract class MongoObject implements MongoObjectInterface{
 	
 	protected MongoClient getMongoClient(){
 		return SingletonMongoClient.getDefaultLocalClient();
-	}
-	
-	protected void save(DBObject doc){
-		String[] pk = null;
-		PrimaryKey primaryKey = this.getClass().getAnnotation(PrimaryKey.class);
-		if(primaryKey != null){
-			pk = primaryKey.PK();
-		}
-		
-		if(pk == null){
-			MongoExecutor.insert(getDBName(), this.getClass().getSimpleName() , doc);
-		}
-		else{
-			BasicDBObject criteria = new BasicDBObject();
-			for (int i = 0; i < pk.length; i++) {
-				try {
-					criteria.append(pk[i], PropertyUtils.getProperty(this, pk[i]));
-				} catch (Exception e) {
-					throw new MongoExecutionException(e);
-				} 
-			}
-			MongoExecutor.upsert(getDBName(), this.getClass().getSimpleName() , criteria, doc);
-		}
 	}
 	
 	@Override
@@ -93,8 +69,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 					throw new MongoExecutionException(e);
 				} 
 			}
-			WriteResult writeResult = MongoExecutor.remove(this.getDBName(), this.getClass(), criteria);
-//			System.out.println(writeResult);
+			MongoExecutor.remove(this.getDBName(), this.getClass(), criteria);
 		}
 	}
 	

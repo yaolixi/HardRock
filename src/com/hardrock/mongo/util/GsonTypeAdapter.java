@@ -1,4 +1,4 @@
-package com.hardrock.util;
+package com.hardrock.mongo.util;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -132,7 +132,7 @@ public class GsonTypeAdapter
 			throws JsonParseException
 			{
 //				Date d = formatter.parseDateTime(json.getAsJsonObject().get("$date").getAsString()).toDate();
-				Date d = DateUtil.parseMongoDateTime(json.getAsJsonObject().get("$date").getAsString());
+				Date d = MongoUtil.parseMongoDateTime(json.getAsJsonObject().get("$date").getAsString());
 				//加上8小时先，后续再根据本地时区来转换
 				if(isReadFromMongo){
 					return new Date(d.getTime() + 28800000L);

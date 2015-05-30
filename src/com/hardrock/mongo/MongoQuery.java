@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.google.gson.Gson;
-import com.hardrock.util.GsonTypeAdapter;
-import com.hardrock.util.GsonTypeAdapter.GsonAdapterType;
+import com.hardrock.mongo.util.GsonTypeAdapter;
+import com.hardrock.mongo.util.GsonTypeAdapter.GsonAdapterType;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
