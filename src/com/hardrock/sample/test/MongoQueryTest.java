@@ -3,8 +3,9 @@ package com.hardrock.sample.test;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.hardrock.mongo.DefaultMongoExecutor;
 import com.hardrock.mongo.MongoQueryCondition;
-import com.hardrock.sample.SampleMongoExecutor;
+import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.sample.SampleMongoQuery;
 import com.hardrock.sample.model.Acct;
 import com.hardrock.sample.model.Mkt;
@@ -15,10 +16,12 @@ import com.mongodb.BasicDBObject;
 public class MongoQueryTest {
 	public static void main(String[] args) {
 		Mkt mkt = new Mkt();
-		mkt.setId(3);
+		mkt.setId(4);
 		mkt.setCode("002");
 		mkt.setName("Test");
-		mkt.save();
+		
+		DefaultMongoExecutor.getInstance("isys", SingletonMongoClient.getDefaultLocalClient()).insert(mkt);
+		
 	}
 	
 	public static void findProdByMktCode(){
@@ -68,7 +71,7 @@ public class MongoQueryTest {
 	}
 	
 	public static void deleteAllRecords(){
-		SampleMongoExecutor.deleteAll(Prod.class.getSimpleName());
+		DefaultMongoExecutor.getInstance("Sample").deleteAll(Prod.class.getSimpleName());
 	}
 	
 	public static void insertAllProds(){
@@ -85,7 +88,7 @@ public class MongoQueryTest {
 			prods.add(prod);
 		}
 		
-		SampleMongoExecutor.insert(prods);
+		DefaultMongoExecutor.getInstance("Sample").insert(prods);
 	}
 	
 	public static void insertAllMkts(){
@@ -98,7 +101,7 @@ public class MongoQueryTest {
 			objs.add(mkt);
 		}
 		
-		SampleMongoExecutor.insert(objs);
+		DefaultMongoExecutor.getInstance("Sample").insert(objs);
 	}
 	
 	public static void insertAllAccts(){
@@ -111,6 +114,6 @@ public class MongoQueryTest {
 			objs.add(acct);
 		}
 		
-		SampleMongoExecutor.insert(objs);
+		DefaultMongoExecutor.getInstance("Sample").insert(objs);
 	}
 }

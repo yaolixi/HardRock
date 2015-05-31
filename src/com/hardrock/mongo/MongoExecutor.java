@@ -24,7 +24,21 @@ public class MongoExecutor {
 	
 	private static Gson sgson = GsonTypeAdapter.getGsonBuilder(GsonAdapterType.SERIALIZER).setExclusionStrategies(strategy).create();
 	
-	private static MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
+	private MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
+	
+	protected MongoExecutor(){}
+	
+	protected MongoExecutor(MongoClient mongoClient){
+		this.mongoClient = mongoClient;
+	}
+	
+	public static MongoExecutor getInstance(){
+		return new MongoExecutor();
+	}
+	
+	public static MongoExecutor getInstance(MongoClient mongoClient){
+		return new MongoExecutor(mongoClient);
+	}
 	
 	/**
 	 * 
@@ -36,7 +50,7 @@ public class MongoExecutor {
 	 * @param background
 	 * @param sparse
 	 */
-	public static void createIndex(String dbName, String collectionName, String json, boolean unique, boolean dropDups, boolean background, boolean sparse){
+	public void ensureIndex(String dbName, String collectionName, String json, boolean unique, boolean dropDups, boolean background, boolean sparse){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collectionName);
@@ -53,8 +67,8 @@ public class MongoExecutor {
 	 * @param json
 	 * @param unique
 	 */
-	public static void createIndex(String dbName, String collectionName, String json, boolean unique){
-		createIndex(dbName, collectionName, json, unique, false, false, false);
+	public void createIndex(String dbName, String collectionName, String json, boolean unique){
+		ensureIndex(dbName, collectionName, json, unique, false, false, false);
 	}
 	
 	/**
@@ -64,10 +78,10 @@ public class MongoExecutor {
 	 * @param collection
 	 * @param doc
 	 */
-	public static void insert(String dbName, String collection, DBObject doc){
+	public WriteResult insert(String dbName, String collection, DBObject doc){
 		DB db = mongoClient.getDB(dbName);
 		DBCollection coll = db.getCollection(collection);
-		coll.insert(doc);
+		return coll.insert(doc);
 	}
 	
 	/**
@@ -76,7 +90,7 @@ public class MongoExecutor {
 	 * @param collection
 	 * @param json
 	 */
-	public static void insert(String dbName, String collection, String json){
+	public void insert(String dbName, String collection, String json){
 		insert(dbName, collection, (DBObject)JSON.parse(json));
 	}
 	
@@ -85,7 +99,7 @@ public class MongoExecutor {
 	 * @param dbName
 	 * @param obj
 	 */
-	public static void insert(String dbName, Object obj){
+	public void insert(String dbName, Object obj){
 		insert(dbName, MongoUtil.getCollectionName(obj), sgson.toJson(obj));
 	}
 	
@@ -95,7 +109,7 @@ public class MongoExecutor {
 	 * @param collection
 	 * @param docs
 	 */
-	public static void insert(String dbName, String collection, List<DBObject> docs){
+	public void insert(String dbName, String collection, List<DBObject> docs){
 		DB db = mongoClient.getDB(dbName);
 		DBCollection coll = db.getCollection(collection);
 		coll.insert(docs);
@@ -107,7 +121,7 @@ public class MongoExecutor {
 	 * @param collection
 	 * @param jsons
 	 */
-	public static void insert(String dbName, String collection, Collection<String> jsons){
+	public void insert(String dbName, String collection, Collection<String> jsons){
 		List<DBObject> docs = new ArrayList<DBObject>();
 		for(String json : jsons){
 			docs.add((DBObject)JSON.parse(json));
@@ -120,7 +134,7 @@ public class MongoExecutor {
 	 * @param dbName
 	 * @param objs
 	 */
-	public static void insert(String dbName, Collection<Object> objs){
+	public void insert(String dbName, Collection<?> objs){
 		Collection<String> jsons = new ArrayList<String>();
 		String collection = null;
 		for(Object obj : objs){
@@ -143,7 +157,7 @@ public class MongoExecutor {
 	 * @param criteria
 	 * @param doc
 	 */
-	protected static void update(String dbName, String collection, DBObject criteria, DBObject doc){
+	public void update(String dbName, String collection, DBObject criteria, DBObject doc){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);
@@ -154,7 +168,7 @@ public class MongoExecutor {
 		coll.save(obj);
 	}
 	
-	protected static void multiUpdate(String dbName, String collection, DBObject criteria, DBObject doc){
+	public void multiUpdate(String dbName, String collection, DBObject criteria, DBObject doc){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);
@@ -168,14 +182,14 @@ public class MongoExecutor {
 	 * @param criteria
 	 * @param doc
 	 */
-	public static void upsert(String dbName, String collection, DBObject criteria, DBObject doc){
+	public void upsert(String dbName, String collection, DBObject criteria, DBObject doc){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);
 		coll.update(criteria, doc, true, false);
 	}
 	
-	public static void upsert(String dbName, Object obj, DBObject criteria){
+	public void upsert(String dbName, Object obj, DBObject criteria){
 		DB db = mongoClient.getDB(dbName);
 		
 		String collectionName = MongoUtil.getCollectionName(obj);
@@ -185,7 +199,7 @@ public class MongoExecutor {
 		coll.update(criteria, dbObject, true, false);
 	}
 	
-	public static void upsert(String dbName, String collection, DBObject criteria, String json){
+	public void upsert(String dbName, String collection, DBObject criteria, String json){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);
@@ -200,7 +214,7 @@ public class MongoExecutor {
 	 * @param collection
 	 * @param criteria
 	 */
-	public static void remove(String dbName, String collection, DBObject criteria){
+	public void remove(String dbName, String collection, DBObject criteria){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);
@@ -214,7 +228,7 @@ public class MongoExecutor {
 	 * @param clazz
 	 * @param criteria
 	 */
-	public static <T> WriteResult remove(String dbName, Class<T> clazz, DBObject criteria){
+	public <T> WriteResult remove(String dbName, Class<T> clazz, DBObject criteria){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(MongoUtil.getCollectionName(clazz));
@@ -227,7 +241,7 @@ public class MongoExecutor {
 	 * @param dbName
 	 * @param collection
 	 */
-	public static void dropCollection(String dbName, String collection){
+	public void dropCollection(String dbName, String collection){
 		DB db = mongoClient.getDB(dbName);
 		DBCollection coll = db.getCollection(collection);
 		coll.drop();
@@ -238,7 +252,7 @@ public class MongoExecutor {
 	 * 
 	 * @param collection
 	 */
-	public static void deleteAll(String dbName, String collection) {
+	public void deleteAll(String dbName, String collection) {
 		remove(dbName, collection, new BasicDBObject());
 	}
 }

@@ -17,7 +17,7 @@ public class MongoQuery {
 	private final static Gson GSON = GsonTypeAdapter.getGsonBuilder(GsonAdapterType.DESERIALIZER).create();
 	
 	//by default connect to local database
-	protected MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
+	private MongoClient mongoClient = SingletonMongoClient.getDefaultLocalClient();
 	
 	//数据库的标识
 	private String dbName;

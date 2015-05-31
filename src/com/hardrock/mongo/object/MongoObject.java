@@ -38,7 +38,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 		}
 		
 		if(pk == null){
-			MongoExecutor.insert(getDBName(), this);
+			MongoExecutor.getInstance(getMongoClient()).insert(getDBName(), this);
 		}
 		else{
 			BasicDBObject criteria = new BasicDBObject();
@@ -49,7 +49,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 					throw new MongoExecutionException(e);
 				} 
 			}
-			MongoExecutor.upsert(getDBName(), this, criteria);
+			MongoExecutor.getInstance(getMongoClient()).upsert(getDBName(), this, criteria);
 		}
 	}
 
@@ -69,7 +69,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 					throw new MongoExecutionException(e);
 				} 
 			}
-			MongoExecutor.remove(this.getDBName(), this.getClass(), criteria);
+			MongoExecutor.getInstance(getMongoClient()).remove(this.getDBName(), this.getClass(), criteria);
 		}
 	}
 	
