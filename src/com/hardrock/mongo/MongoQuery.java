@@ -107,7 +107,7 @@ public class MongoQuery {
 	 * @param clazz
 	 * @return
 	 */
-	protected <T> T findOne(Class<T> clazz){
+	public <T> T findOne(Class<T> clazz){
 		DB db = mongoClient.getDB(dbName);
 		
 		DBCollection coll = db.getCollection(collection);

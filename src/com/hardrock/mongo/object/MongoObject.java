@@ -16,6 +16,7 @@ import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
 import com.hardrock.mongo.criteria.Criteria;
+import com.hardrock.sample.ols.model.StudentCourseDetail;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -82,11 +83,18 @@ public abstract class MongoObject implements MongoObjectInterface{
 		}
 	}
 	
-	public Collection<MongoObject> find(){
+	public Collection<? extends MongoObject> find(){
 		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), this.actualClass().getSimpleName());
 		_queryConditionForQueryUsage.setCriteria(_criteriaForQueryUsage);
 		query.setQueryCondition(_queryConditionForQueryUsage);
 		return query.findAll(this.actualClass());
+	}
+	
+	public MongoObject findOne(){
+		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), this.actualClass().getSimpleName());
+		_queryConditionForQueryUsage.setCriteria(_criteriaForQueryUsage);
+		query.setQueryCondition(_queryConditionForQueryUsage);
+		return query.findOne(this.actualClass());
 	}
 	
 	public MongoObject sort(DBObject orderBy){
@@ -214,7 +222,12 @@ public abstract class MongoObject implements MongoObjectInterface{
 		this._cglibInheritClass = cglibInheritClass;
 	}
 	
-	public void bindForeignKey(String property, MongoObject obj){
+	/**
+	 * Bind the foreign key by assigned property, if the property does not exist, his function will be ignored.
+	 * @param property
+	 * @param obj
+	 */
+	public MongoObject bindForeignKey(String property, MongoObject obj){
 		Field[] fields = this.actualClass().getDeclaredFields();
 		
 		for (int i = 0; i < fields.length; i++) {
@@ -222,7 +235,9 @@ public abstract class MongoObject implements MongoObjectInterface{
 				ForeignKey foreignKey = fields[i].getAnnotation(ForeignKey.class);
 				if(foreignKey != null){
 					MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), foreignKey.foreignClass().getSimpleName());
-					query.setQueryCondition(new MongoQueryCondition(obj.buildCriteria()));
+					MongoQueryCondition condition = new MongoQueryCondition(obj.buildCriteria());
+					condition.setFields(new BasicDBObject(foreignKey.foreignKey(), 1));
+					query.setQueryCondition(condition);
 					Collection<?> fkResult = query.findAll(foreignKey.foreignClass());
 					
 					BasicDBList dl = new BasicDBList();
@@ -238,11 +253,32 @@ public abstract class MongoObject implements MongoObjectInterface{
 				}
 			}
 		}
+		
+		return this;
 	}
 	
-//	protected static Collection<? extends MongoObject> findAll(String dbName, Class<? extends MongoObject> clazz, MongoQueryCondition queryCondition){
-//		MongoQuery query = new MongoQuery(dbName, clazz.getSimpleName());
-//		query.setQueryCondition(queryCondition);
-//		return query.findAll(clazz);
-//	}
+	public MongoObject bindForeignKey(String property, MongoObject obj, String foreignKey){
+		MongoQuery query = new MongoQuery(getMongoClient(), getDBName(), obj.actualClass().getSimpleName());
+		MongoQueryCondition condition = new MongoQueryCondition(obj.buildCriteria());
+		condition.setFields(new BasicDBObject(foreignKey, 1));
+		query.setQueryCondition(condition);
+		Collection<?> fkResult = query.findAll(obj.actualClass());
+		
+		BasicDBList dl = new BasicDBList();
+		
+		for(Object mo : fkResult){
+			try {
+				dl.add(PropertyUtils.getProperty(mo, foreignKey));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		_criteriaForQueryUsage.append(property, new BasicDBObject("$in", dl));
+		return this;
+	}
+	
+	public void bind(String peroperty, Class<? extends MongoObject> clazz, String foreignKey) {
+		// TODO Auto-generated method stub
+		
+	}
 }

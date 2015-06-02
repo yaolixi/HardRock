@@ -1,0 +1,33 @@
+use ols;
+db.Course.insert({id:1, code:"000001", name:"数学"});
+db.Course.insert({id:2, code:"000002", name:"语文"});
+db.Course.insert({id:3, code:"000003", name:"英语"});
+db.Course.insert({id:4, code:"000004", name:"政治"});
+
+db.CourseInstance.insert({id:1, courseId:1, beginTime:ISODate("2014-08-31T16:00:00.0Z"), endTime:ISODate("2015-06-29T16:00:00.0Z")});
+db.CourseInstance.insert({id:2, courseId:2, beginTime:ISODate("2014-08-31T16:00:00.0Z"), endTime:ISODate("2015-06-29T16:00:00.0Z")});
+db.CourseInstance.insert({id:3, courseId:3, beginTime:ISODate("2014-08-31T16:00:00.0Z"), endTime:ISODate("2015-06-29T16:00:00.0Z")});
+db.CourseInstance.insert({id:4, courseId:4, beginTime:ISODate("2014-08-31T16:00:00.0Z"), endTime:ISODate("2015-06-29T16:00:00.0Z")});
+
+db.Teacher.insert({id:1, code:"000001", name:"高纳德", title:"教授"});
+db.Teacher.insert({id:2, code:"000002", name:"陈玉波", title:"付教授"});
+db.Teacher.insert({id:3, code:"000003", name:"高琴", title:"教授"});
+db.Teacher.insert({id:4, code:"000004", name:"张步仁", title:"教授"});
+db.Teacher.insert({id:5, code:"000005", name:"贾步义", title:"讲师"});
+db.Teacher.insert({id:6, code:"000006", name:"邵珍珠", title:"教授"});
+
+db.CourseInstanceDetail.insert({id:1, courseInstanceId:1, teacherId:1, location:"711", beginTime:ISODate("2014-09-01T00:00:00.0Z"), endTime:ISODate("2014-09-01T00:45:00.0Z")});
+db.CourseInstanceDetail.insert({id:2, courseInstanceId:1, teacherId:1, location:"719", beginTime:ISODate("2014-09-01T01:00:00.0Z"), endTime:ISODate("2014-09-01T01:45:00.0Z")});
+db.CourseInstanceDetail.insert({id:3, courseInstanceId:1, teacherId:1, location:"711", beginTime:ISODate("2014-09-01T06:00:00.0Z"), endTime:ISODate("2014-09-01T06:45:00.0Z")});
+db.CourseInstanceDetail.insert({id:4, courseInstanceId:1, teacherId:1, location:"711", beginTime:ISODate("2014-09-01T07:00:00.0Z"), endTime:ISODate("2014-09-01T07:45:00.0Z")});
+
+db.Student.insert({id:1, code:"000001", name:"吕布"});
+db.Student.insert({id:2, code:"000002", name:"太史慈"});
+db.Student.insert({id:3, code:"000003", name:"董袭"});
+db.Student.insert({id:4, code:"000004", name:"甘宁"});
+db.Student.insert({id:5, code:"000005", name:"程普"});
+
+db.StudentCourseDetail.insert({studentId:1, courseInstanceDetailId:1});
+db.StudentCourseDetail.insert({studentId:1, courseInstanceDetailId:2});
+db.StudentCourseDetail.insert({studentId:2, courseInstanceDetailId:3});
+db.StudentCourseDetail.insert({studentId:2, courseInstanceDetailId:4});

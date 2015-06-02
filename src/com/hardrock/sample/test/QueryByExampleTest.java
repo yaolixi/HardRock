@@ -28,27 +28,27 @@ public class QueryByExampleTest {
 	/**
 	 * query by example
 	 */
-	@Test
-	public void testFindProdbyId(){
-		Prod prod = MongoObjectProxy.create(Prod.class);
-		prod.setId(1);
-		Collection<MongoObject> prods = prod.find();
-		System.out.println(prods);
-	}
-	
-//	/**
-//	 * query by foreign key
-//	 */
 //	@Test
-//	public void testFindProdbyForeignKey(){
-//		Mkt mkt = MongoObjectProxy.create(Mkt.class);
-//		mkt.setCode("000");
-//		
+//	public void testFindProdbyId(){
 //		Prod prod = MongoObjectProxy.create(Prod.class);
-//		prod.bindForeignKey("mktId", mkt);
-//		Collection<MongoObject> prods = prod.sortDesc("id").retainFields(new String[]{"name", "code"}).limit(1).skip(1).find();
+//		prod.setId(1);
+//		Collection<MongoObject> prods = prod.find();
 //		System.out.println(prods);
 //	}
+	
+	/**
+	 * query by foreign key
+	 */
+	@Test
+	public void testFindProdbyForeignKey(){
+		Mkt mkt = MongoObjectProxy.create(Mkt.class);
+		mkt.setCode("001");
+		
+		Prod prod = MongoObjectProxy.create(Prod.class);
+		prod.bindForeignKey("mktId", mkt);
+		Collection<MongoObject> prods = (Collection<MongoObject>) prod.sortDesc("id").retainFields(new String[]{"name", "code"}).limit(1).skip(0).find();
+		System.out.println(prods);
+	}
 //	
 //	/**
 //	 * query by 2 level foreign key
