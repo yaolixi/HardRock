@@ -3,6 +3,8 @@ package com.hardrock.mongo.object;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
+import net.sf.cglib.reflect.FastClass;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.bson.BSONObject;
 
@@ -16,9 +18,12 @@ import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
 import com.hardrock.mongo.criteria.Criteria;
-import com.hardrock.sample.ols.model.StudentCourseDetail;
+import com.hardrock.sample.ols.model.Student;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
@@ -75,12 +80,7 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	private Class actualClass(){
-		if(_cglibInheritClass == null){
-			return this.getClass();
-		}
-		else{
-			return _cglibInheritClass;
-		}
+		return (_cglibInheritClass == null) ? this.getClass() : _cglibInheritClass;
 	}
 	
 	public Collection<? extends MongoObject> find(){
@@ -277,8 +277,31 @@ public abstract class MongoObject implements MongoObjectInterface{
 		return this;
 	}
 	
-	public void bind(String peroperty, Class<? extends MongoObject> clazz, String foreignKey) {
-		// TODO Auto-generated method stub
-		
+	public <T extends MongoObject> T bind(String selfProperty, Class<T> clazz, String clazzProperty) {
+		T t = null;
+		try {
+			DB db = getMongoClient().getDB(getDBName());
+			DBCollection coll = db.getCollection(this.actualClass().getSimpleName());
+			DBCursor cursor = coll.find(this.buildCriteria(), new BasicDBObject(selfProperty, 1).append("_id", 0));
+			BasicDBList dl = new BasicDBList();
+			try {
+				while (cursor.hasNext()) {
+					dl.add(cursor.next().get(selfProperty));
+				}
+			}
+			catch (Exception e) {
+				throw new MongoExecutionException(e);
+			}
+			finally{
+				cursor.close();
+			}
+			
+			t = clazz.newInstance();
+			t._criteriaForQueryUsage.append(clazzProperty, new BasicDBObject("$in", dl));
+			
+		} catch (Exception e) {
+			throw new MongoExecutionException(e);
+		}
+		return t;
 	}
 }

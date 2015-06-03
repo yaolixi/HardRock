@@ -1,6 +1,9 @@
 package com.hardrock.sample.ols.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+
+import net.sf.cglib.reflect.FastClass;
 
 import com.hardrock.mongo.object.MongoObjectProxy;
 import com.hardrock.sample.ols.OlsMongoQuery;
@@ -36,14 +39,9 @@ public class OlsService {
 		
 		StudentCourseDetail scd = MongoObjectProxy.create(StudentCourseDetail.class);
 		scd.bindForeignKey("studentId", student);
-//		scd.bindForeignKey("studentId", student, "id");
-		
-//		System.out.println(scd.find());
 		
 		CourseInstanceDetail cid = MongoObjectProxy.create(CourseInstanceDetail.class);
 		cid.bindForeignKey("id", scd, "courseInstanceDetailId");
-		
-//		System.out.println(cid.find());
 		
 		Teacher teacher = MongoObjectProxy.create(Teacher.class); 
 		teacher.bindForeignKey("id", cid, "teacherId");
@@ -55,23 +53,13 @@ public class OlsService {
 		Student student = MongoObjectProxy.create(Student.class);
 		student.setCode(code);
 		
-		StudentCourseDetail scd = new StudentCourseDetail();
-		scd.bindForeignKey("studentId", student, "id");
-		
-		student.bind("id", StudentCourseDetail.class, "studentId");
-		
-		System.out.println(scd.find());
-		
-//		CourseInstanceDetail cid = new CourseInstanceDetail();
-//		cid.bindForeignKey("id", scd, "courseInstanceDetailId");
-//		
-//		Teacher teacher = new Teacher();
-//		teacher.bindForeignKey("id", cid, "teacherId");
-//		
-//		System.out.println(teacher.find());
+		Teacher teacher = student.bind("id", StudentCourseDetail.class, "studentId")
+				.bind("courseInstanceDetailId", CourseInstanceDetail.class, "id")
+				.bind("teacherId", Teacher.class, "id");
+		System.out.println(teacher.find());
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		OlsService.getTeachersByStudentCode2("000001");
 	}
 }
