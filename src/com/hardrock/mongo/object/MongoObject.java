@@ -3,8 +3,6 @@ package com.hardrock.mongo.object;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import net.sf.cglib.reflect.FastClass;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.bson.BSONObject;
 
@@ -18,7 +16,6 @@ import com.hardrock.mongo.SingletonMongoClient;
 import com.hardrock.mongo.annotation.ForeignKey;
 import com.hardrock.mongo.annotation.PrimaryKey;
 import com.hardrock.mongo.criteria.Criteria;
-import com.hardrock.sample.ols.model.Student;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -278,30 +275,24 @@ public abstract class MongoObject implements MongoObjectInterface{
 	}
 	
 	public <T extends MongoObject> T bind(String selfProperty, Class<T> clazz, String clazzProperty) {
-		T t = null;
+		DB db = getMongoClient().getDB(getDBName());
+		DBCollection coll = db.getCollection(this.actualClass().getSimpleName());
+		DBCursor cursor = coll.find(this.buildCriteria(), new BasicDBObject(selfProperty, 1).append("_id", 0));
+		BasicDBList dl = new BasicDBList();
 		try {
-			DB db = getMongoClient().getDB(getDBName());
-			DBCollection coll = db.getCollection(this.actualClass().getSimpleName());
-			DBCursor cursor = coll.find(this.buildCriteria(), new BasicDBObject(selfProperty, 1).append("_id", 0));
-			BasicDBList dl = new BasicDBList();
-			try {
-				while (cursor.hasNext()) {
-					dl.add(cursor.next().get(selfProperty));
-				}
+			while (cursor.hasNext()) {
+				dl.add(cursor.next().get(selfProperty));
 			}
-			catch (Exception e) {
-				throw new MongoExecutionException(e);
-			}
-			finally{
-				cursor.close();
-			}
-			
-			t = clazz.newInstance();
-			t._criteriaForQueryUsage.append(clazzProperty, new BasicDBObject("$in", dl));
-			
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new MongoExecutionException(e);
 		}
+		finally{
+			cursor.close();
+		}
+		
+		T t = MongoObjectProxy.create(clazz);
+		t._criteriaForQueryUsage.append(clazzProperty, new BasicDBObject("$in", dl));
 		return t;
 	}
 }

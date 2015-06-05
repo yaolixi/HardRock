@@ -1,10 +1,9 @@
 package com.hardrock.sample.ols.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
-import net.sf.cglib.reflect.FastClass;
-
+import com.hardrock.mongo.criteria.Criteria;
+import com.hardrock.mongo.criteria.Restrictions;
 import com.hardrock.mongo.object.MongoObjectProxy;
 import com.hardrock.sample.ols.OlsMongoQuery;
 import com.hardrock.sample.ols.model.Course;
@@ -56,10 +55,13 @@ public class OlsService {
 		Teacher teacher = student.bind("id", StudentCourseDetail.class, "studentId")
 				.bind("courseInstanceDetailId", CourseInstanceDetail.class, "id")
 				.bind("teacherId", Teacher.class, "id");
-		System.out.println(teacher.find());
+		teacher.setId(1);
+		System.out.println(teacher.sortDesc("id").find());
 	}
 	
 	public static void main(String[] args) throws Exception {
-		OlsService.getTeachersByStudentCode2("000001");
+		Teacher teacher = MongoObjectProxy.create(Teacher.class);
+		teacher.addCriteria(new Criteria().add(Restrictions.gte("id", 2)).add(Restrictions.lte("id", 3)));
+		System.out.println(teacher.find());
 	}
 }

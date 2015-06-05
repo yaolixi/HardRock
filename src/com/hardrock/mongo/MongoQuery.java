@@ -86,7 +86,10 @@ public class MongoQuery {
 
 		DBCollection coll = db.getCollection(collection);
 
-		DBCursor cursor = coll.find(getQueryCondition().getCriteria(), getQueryCondition().getFields()).sort(getQueryCondition().getOrderBy()).skip(getQueryCondition().getSkip()).limit(getQueryCondition().getLimit());
+		DBCursor cursor = coll.find(getQueryCondition().getCriteria(), getQueryCondition().getFields())
+				.sort(getQueryCondition().getOrderBy())
+				.skip(getQueryCondition().getSkip())
+				.limit(getQueryCondition().getLimit());
 		
 		try {
 			while (cursor.hasNext()) {
@@ -114,9 +117,7 @@ public class MongoQuery {
 		
 		DBObject obj = (DBObject)coll.findOne(getQueryCondition().getCriteria(), getQueryCondition().getFields());
 		
-		if(obj == null){return null;}
-		
-		return GSON.fromJson(obj.toString(), clazz);
+		return (obj == null) ? null : GSON.fromJson(obj.toString(), clazz);
 	}
 	
 	/**

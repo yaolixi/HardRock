@@ -56,6 +56,12 @@ public class Restrictions {
 		return criterion;
 	}
 	
+	public static Criterion between(String property, Object left, Object right){
+		Criterion criterion = new Criterion();
+		criterion.getBo().append(property, new BasicDBObject("$gte", left).append("$lte", right));
+		return criterion;
+	}
+	
 	public static Criterion in(String property, Object[] objs){
 		Criterion criterion = new Criterion();
 		BasicDBList dl = new BasicDBList();
