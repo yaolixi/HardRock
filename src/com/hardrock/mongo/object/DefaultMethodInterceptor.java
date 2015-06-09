@@ -3,12 +3,12 @@ package com.hardrock.mongo.object;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
 import org.apache.commons.beanutils.PropertyUtils;
 
 import com.mongodb.MongoClient;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 public class DefaultMethodInterceptor <T extends MongoObject> implements MethodInterceptor{
 	

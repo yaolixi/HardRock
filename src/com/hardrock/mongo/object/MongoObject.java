@@ -192,8 +192,13 @@ public abstract class MongoObject implements MongoObjectInterface{
 	
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setExclusionStrategies(new MongoObjectExclusionStrategy()).create();
-		return this.getClass().getSimpleName() + "=" + gson.toJson(this);
+		if(_cglibInheritClass == null){
+			Gson gson = new GsonBuilder().setExclusionStrategies(new MongoObjectExclusionStrategy()).create();
+			return this.getClass().getSimpleName() + "=" + gson.toJson(this);
+		}
+		else{
+			return super.toString();
+		}
 	}
 	
 	public boolean isEditableInProduction(){

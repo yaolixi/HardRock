@@ -40,7 +40,13 @@ public class Restrictions {
 	
 	public static Criterion lte(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$lte", obj));
+		BasicDBObject bo = (BasicDBObject) criterion.getBo().get(property);
+		if(bo == null){
+			criterion.getBo().append(property, new BasicDBObject("$lte", obj));
+		}
+		else{
+			criterion.getBo().append(property, bo.append("$lte", obj));
+		}
 		return criterion;
 	}
 	
@@ -52,13 +58,65 @@ public class Restrictions {
 	
 	public static Criterion gte(String property, Object obj){
 		Criterion criterion = new Criterion();
-		criterion.getBo().append(property, new BasicDBObject("$gte", obj));
+		BasicDBObject bo = (BasicDBObject) criterion.getBo().get(property);
+		if(bo == null){
+			criterion.getBo().append(property, new BasicDBObject("$gte", obj));
+		}
+		else{
+			criterion.getBo().append(property, bo.append("$gte", obj));
+		}
 		return criterion;
 	}
 	
-	public static Criterion between(String property, Object left, Object right){
+	/**
+	 * Left close and right close
+	 * @param property
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static Criterion betweenLCRC(String property, Object left, Object right){
 		Criterion criterion = new Criterion();
 		criterion.getBo().append(property, new BasicDBObject("$gte", left).append("$lte", right));
+		return criterion;
+	}
+	
+	/**
+	 * left close and right open
+	 * @param property
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static Criterion betweenLCRO(String property, Object left, Object right){
+		Criterion criterion = new Criterion();
+		criterion.getBo().append(property, new BasicDBObject("$gte", left).append("$lt", right));
+		return criterion;
+	}
+	
+	/**
+	 * left open and right close
+	 * @param property
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static Criterion betweenLORC(String property, Object left, Object right){
+		Criterion criterion = new Criterion();
+		criterion.getBo().append(property, new BasicDBObject("$gte", left).append("$lt", right));
+		return criterion;
+	}
+	
+	/**
+	 * left open and right open
+	 * @param property
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static Criterion betweenLORO(String property, Object left, Object right){
+		Criterion criterion = new Criterion();
+		criterion.getBo().append(property, new BasicDBObject("$gte", left).append("$lt", right));
 		return criterion;
 	}
 	

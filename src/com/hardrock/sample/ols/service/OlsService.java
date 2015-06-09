@@ -62,6 +62,9 @@ public class OlsService {
 	public static void main(String[] args) throws Exception {
 		Teacher teacher = MongoObjectProxy.create(Teacher.class);
 		teacher.addCriteria(new Criteria().add(Restrictions.gte("id", 2)).add(Restrictions.lte("id", 3)));
+//		teacher.buildCriteria().append("id", new BasicDBObject("$gte", 2).append("$lte", 3));
+//		teacher.buildCriteria().append("id", new BasicDBObject("$gte", 2)).append("id", new BasicDBObject("$lte", 2));
+		
 		System.out.println(teacher.find());
 	}
 }

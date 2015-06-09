@@ -1,27 +1,13 @@
 package com.hardrock.sample.test;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.hardrock.mongo.MongoQuery;
-import com.hardrock.mongo.MongoQueryCondition;
-import com.hardrock.mongo.SingletonMongoClient;
-import com.hardrock.mongo.criteria.Criteria;
-import com.hardrock.mongo.criteria.Restrictions;
 import com.hardrock.mongo.object.MongoObject;
 import com.hardrock.mongo.object.MongoObjectProxy;
-import com.hardrock.mongo.util.MongoUtil;
 import com.hardrock.sample.model.Mkt;
 import com.hardrock.sample.model.Prod;
-import com.hardrock.sample.model.ProdStatus;
-import com.mongodb.AggregationOutput;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 public class QueryByExampleTest {
 	
